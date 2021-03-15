@@ -2,12 +2,12 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA, IncrementalPCA
-from matplotlib.image import imread
 
 
 def main():
     # read image by opencv
-    img_origin = imread('thaiph.jpg')
+    # img_origin = imread('thaiph.jpg')
+    img_origin = cv2.imread('thaiph.jpg', 1)
     # print(img_origin)
 
     # split matrix image
@@ -26,7 +26,7 @@ def main():
         print(ipca.components_.shape)
         print(ipca.explained_variance_.shape)
         print(ipca.explained_variance_ratio_.shape)
-        return img_compressed, ipca
+        return ipca.components_
 
     def extract_img(k, img_com):
         ipca = IncrementalPCA(n_components=k)
@@ -39,6 +39,9 @@ def main():
         img_compressed = ipca.fit_transform(img)
         # print(img.shape)
         # print(img_compressed.shape)
+        print('components : ', ipca.components_.shape)
+        print('variance : ', ipca.explained_variance_.shape)
+        print('variance ratio : ', ipca.explained_variance_ratio_.shape)
         img_extracted = ipca.inverse_transform(img_compressed)
         # print(img_extracted)
         return img_extracted
@@ -55,13 +58,18 @@ def main():
         plt.imshow(img)
         plt.show()
 
-    img_s = [compress_img(100, img_tmp) for img_tmp in img_s]
-    img_test = [extract_img(100, img_tmp) for img_tmp in img_s]
-    # img_test = [compress_extract_img(100, img_tmp) for img_tmp in img_s]
+    # img_s = [compress_img(100, img_tmp) for img_tmp in img_s]
+    # img_test = [extract_img(100, img_tmp) for img_tmp in img_s]
+    img_test = [compress_extract_img(200, img_tmp) for img_tmp in img_s]
     img_test = concat_img(*img_test)
+    # cv2.imshow('test1', img_test)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
     print(img_test.shape)
-    print(img_origin.shape)
     cv2.imwrite('test1.jpg', img_test)
+
+    test = compress_img(200, img0)
+    print(type(test))
 
 
 if __name__ == '__main__':
