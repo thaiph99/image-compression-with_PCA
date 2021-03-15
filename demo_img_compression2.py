@@ -23,19 +23,22 @@ def main():
         ipca = IncrementalPCA(n_components=k)
         img_compressed = ipca.fit_transform(img)
         print('components : ', ipca.n_components_)
-        return img_compressed
+        print(ipca.components_.shape)
+        print(ipca.explained_variance_.shape)
+        print(ipca.explained_variance_ratio_.shape)
+        return img_compressed, ipca
 
     def extract_img(k, img_com):
         ipca = IncrementalPCA(n_components=k)
         img_extracted = ipca.inverse_transform(img_com)
-        print(img_extracted)
+        # print(img_extracted)
         return img_extracted
 
     def compress_extract_img(k, img):
         ipca = IncrementalPCA(n_components=k)
         img_compressed = ipca.fit_transform(img)
-        print(img.shape)
-        print(img_compressed.shape)
+        # print(img.shape)
+        # print(img_compressed.shape)
         img_extracted = ipca.inverse_transform(img_compressed)
         # print(img_extracted)
         return img_extracted
