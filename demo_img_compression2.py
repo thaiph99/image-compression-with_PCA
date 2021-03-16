@@ -95,9 +95,12 @@ def main():
     '''
 
     print(img_s[0][1]['components_'].shape)
+    print(img_s[0][1]['explained_variance_'].shape)
+    print(img_s[0][1]['explained_variance_ratio_'].shape)
+    print('-------')
+    
     # json_obj = json.dumps(img_s[0][1], cls=NpEncoder)
     # print(json_obj)
-
     # with open('data.json', 'w') as f:
     #     json.dump(json_obj, f)
 
