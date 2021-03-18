@@ -1,9 +1,7 @@
 from sklearn.decomposition import PCA, IncrementalPCA
 import numpy as np
-
-a = np.array([[1, 2, 3, 4], [1, 2, 3, 4]])
-b = np.array([[1, 2, 3, 4], [1, 2, 3, 4]])
-c = np.array([[1, 2, 3, 4], [1, 2, 3, 4]])
-d = [a, b, c]
-
-ipca = IncrementalPCA(n_components=200)
+import json
+b = "[[[[-902.8153758619858, -938.660379593465, -428.5722955695384]]]]"
+a = json.loads(b)
+print(a)
+print(type(a))
