@@ -365,7 +365,7 @@ PCA và SVD có mối quan hệ đặc biệt với nhau. Xin phép nhắc lại
 
 
 \subsection{SVD cho bài toán xấp xỉ hạng thấp tốt nhất}
-Nghiệm của bài toán xấp xỉ một ma trận bởi một ma trận có hạng không vượt quá $k$ (xem Chương~\ref{cha:svd}:
+Nghiệm của bài toán xấp xỉ một ma trận bởi một ma trận có hạng không vượt quá $k$:
 \begin{equation}
     \label{eqn:28_1}
     \begin{aligned}
@@ -535,7 +535,41 @@ tiếp tính toán trị riêng và vector riêng cho ma trận hiệp phương 
 khả thi. Lúc này, các trị riêng và vector riêng của ma trận hiệp phương sai thường được tính thông qua \textit{power method}
 (\url{https://goo.gl/eBRPxH}).
 
-\section{Một số ứng dụng}
+\section{Ứng dụng trong nén dữ liệu đa phương tiện dạng ảnh}
+\subsection{Triển khai thuật toán PCA bằng ngôn ngữ python}
+
+\newpage
+\begin{lstlisting}[language=Python]
+    import numpy as np
+ 
+    def PCA(X , num_components):
+        
+        #Step-1
+        X_meaned = X - np.mean(X , axis = 0)
+        
+        #Step-2
+        cov_mat = np.cov(X_meaned , rowvar = False)
+        
+        #Step-3
+        eigen_values , eigen_vectors = np.linalg.eigh(cov_mat)
+        
+        #Step-4
+        sorted_index = np.argsort(eigen_values)[::-1]
+        sorted_eigenvalue = eigen_values[sorted_index]
+        sorted_eigenvectors = eigen_vectors[:,sorted_index]
+        
+        #Step-5
+        eigenvector_subset = sorted_eigenvectors[:,0:num_components]
+        
+        #Step-6
+        X_reduced = np.dot(eigenvector_subset.transpose() , X_meaned.transpose() ).transpose()
+        
+        return X_reduced
+    
+\end{lstlisting}
+
+
+\section{Một số ứng dụng khác}
 Ứng dụng đầu tiên của PCA chính là việc giảm chiều dữ liệu, giúp
 việc lưu trữ và tính toán được thuận tiện hơn. Thực tế cho thấy, nhiều khi làm
 việc trên dữ liệu đã được giảm chiều mang lại kết quả tốt hơn so với dữ liệu
@@ -670,8 +704,6 @@ từ một vector 100 chiều, so với 11368 chiều như ở hàng trên.
 
 
 % Phần còn lại của source code có thể được tìm thấy \href{https://github.com/tiepvupsu/tiepvupsu.github.io/blob/master/assets/28_pca2/python/EigenFaces.ipynb}{tại đây}.
-\subsection{Nén dữ liêu đa phương tiện dạng ảnh}
-\subsubsection{}
 
 \subsection{Dò tìm điểm bất thường}
 Ngoài các ứng dụng về nén và phân loại, PCA còn được sử dụng trong nhiều lĩnh
