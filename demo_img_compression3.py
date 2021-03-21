@@ -19,7 +19,14 @@ class NpEncoder(json.JSONEncoder):
 
 def main():
 
-    img_origin = cv2.imread('thaiph.jpg', 1)
+    path1 = 'datajpg/'
+    path2 = 'datapng/'
+    f1 = '.jpg'
+    f2 = '.png'
+
+    path, f = path2, f2
+    print(path+'imgg_origin'+f)
+    img_origin = cv2.imread(path+'imgg_origin'+f, 1)
 
     # split matrix image
     img0 = img_origin[:, :, 0]
@@ -27,7 +34,7 @@ def main():
     img2 = img_origin[:, :, 2]
     print(img0.shape)
 
-    with open('img_origin.json', 'w') as f:
+    with open(path+'imgj_origin.json', 'w') as f:
         json.dump(img_origin, f, cls=NpEncoder)
 
     def compress_img(k, img):
@@ -36,7 +43,12 @@ def main():
         list_att = ['components_', 'mean_', 'explained_variance_', 'whiten']
         ipca_att = {}
         for att in list_att:
-            ipca_att[att] = ipca.__getattribute__(att)
+            if type(np.array([])) == type(ipca.__getattribute__(att)):
+                att_values = np.round(ipca.__getattribute__(att), 4)
+            else:
+                att_values = ipca.__getattribute__(att)
+            # ipca_att[att] = ipca.__getattribute__(att)
+            ipca_att[att] = att_values
 
         return img_compressed, ipca_att
 
@@ -69,8 +81,7 @@ def main():
     # for i in range(len(img_s)):
     #     img_com = compress_img(n_components, img_s[i])
     #     img_compressed['img'+str(i)] = img_com
-
-    print(type(img_compressed))
+    # print(type(img_compressed))
 
     print('--------------------------------------------------')
     tmp = img_compressed[0][1]
@@ -82,12 +93,12 @@ def main():
     print('--------------------------------------------------')
 
     # write json file
-    with open('img_compressed.json', 'w') as f:
+    with open(path+'imgj_compressed.json', 'w') as f:
         json.dump(img_compressed, f, cls=NpEncoder)
 
     # read json file
     img_compressed1 = {}
-    with open('img_compressed.json', 'r') as f:
+    with open(path+'imgj_compressed.json', 'r') as f:
         img_compressed1 = json.load(f)
 
     # extract image
@@ -97,7 +108,8 @@ def main():
     print(img_extracted.shape)
 
     # export image
-    cv2.imwrite('imgg_extracted.jpg', img_extracted)
+    fname = path+'imgg_extracted.png'
+    cv2.imwrite(fname, img_extracted)
     print('Done')
 
 
