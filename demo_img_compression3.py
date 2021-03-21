@@ -28,7 +28,7 @@ def main():
     f2 = '.png'
     f3 = '.jpeg'
 
-    path, f = path1, f1
+    path, f = path4, f3
     img_origin = cv2.imread(path+'imgg_origin'+f, 1)
 
     # split matrix image
@@ -51,12 +51,6 @@ def main():
         list_att = ['components_', 'mean_', 'explained_variance_', 'whiten']
         ipca_att = {}
         for att in list_att:
-            # if type(np.array([])) == type(ipca.__getattribute__(att)):
-            #     att_values = np.round(ipca.__getattribute__(att), 4)
-            # else:
-            #     att_values = ipca.__getattribute__(att)
-            # ipca_att[att] = ipca.__getattribute__(att)
-            # print(att_values)
             ipca_att[att] = ipca.__getattribute__(att)
 
         return k, img_compressed, ipca_att
@@ -85,7 +79,7 @@ def main():
         plt.show()
 
     img_s = [img0, img1, img2]
-    percent = 99.5
+    percent = 99
 
     img_compressed = [compress_img(img_tmp, percent) for img_tmp in img_s]
 
@@ -122,12 +116,12 @@ def main():
     img_extracted = concat_img(*img_extracted)
     print(img_extracted.shape)
     fname = path+'imgg_extracted.jpg'
-    # export image
+
     if f == '.png':
         fname = path+'imgg_extracted.png'
     if f == '.jpeg':
         fname = path+'imgg_extracted.jpeg'
-
+    # export image
     cv2.imwrite(fname, img_extracted)
     print('Done')
 
