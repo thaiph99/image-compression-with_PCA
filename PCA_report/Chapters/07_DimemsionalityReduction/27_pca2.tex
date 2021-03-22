@@ -538,30 +538,16 @@ khả thi. Lúc này, các trị riêng và vector riêng của ma trận hiệp
 \section{Ứng dụng trong nén dữ liệu đa phương tiện dạng ảnh}
 \subsection{Triển khai thuật toán PCA bằng ngôn ngữ python}
 
-Để thực hiện triển khai thuật toán chúng ta sẽ thực hiện bằng 5 bước sau :
+Để thực hiện triển khai thuật toán chúng ta sẽ thực hiện bằng 6 bước sau :
 
-\begin{enumerate}
-    \item Trừ các giá trị trung bình của các biến
-          \begin{itemize}
-              \item Trừ giá trị trung bình của mỗi biến khỏi tập dữ liệu để tập dữ liệu phải được tập trung vào gốc.
-          \end{itemize}
-    \item Tính toán ma trận phương sai
-          \begin{itemize}
-              \item Tính toán ma trận phương sai của dữ liệu lấy trung bình.
-          \end{itemize}
-    \item Tính toán ma trận phương sai
-          \begin{itemize}
-              \item Tính toán ma trận phương sai của dữ liệu lấy trung bình.
-          \end{itemize}
-    \item Tính toán ma trận phương sai
-          \begin{itemize}
-              \item Tính toán ma trận phương sai của dữ liệu lấy trung bình.
-          \end{itemize}
-    \item Tính toán ma trận phương sai
-          \begin{itemize}
-              \item Tính toán ma trận phương sai của dữ liệu lấy trung bình.
-          \end{itemize}
-\end{enumerate}
+\begin{itemize}
+    \item Tính hiệu giá trị của giá trị mỗi cột và giá trị trung bình của cột đó
+    \item Tính ma trận hiệp phương sai dữ liệu
+    \item Tính toán giá trị riêng và vector riêng của ma trận hiệp phương sai
+    \item Sắp xêp các giá trị riêng theo chiều tăng dần
+    \item Chọn tập con trong tập giá trị riêng đã sắp xếp
+    \item Chuyển đổi dữ liệu
+\end{itemize}
 
 \newpage
 Đây là đoạn code thực hiện các bước trên sử dụng ngôn ngữ python và thư viện numpy (1 thư viện hỗ trợ tính toán)
@@ -597,7 +583,40 @@ khả thi. Lúc này, các trị riêng và vector riêng của ma trận hiệp
 \
 
 \subsection{Chương trình nén sử dụng PCA bằng ngôn ngữ python}
+Hàm sử dụng để nén các ma trận ảnh riêng biệt kích thước mxn:
+% \newpage
 
+Hàm này đươc thực thi với các tham số  là ma trận các điểm ảnh và phần trăm nén ảnh.
+
+\begin{lstlisting}[language=Python]
+    def compress_img(img, percen):
+        '''compress image with percent'''
+
+        pca = PCA().fit(img)
+        var_cumu = np.cumsum(pca.explained_variance_ratio_)*100
+        k = np.argmax(var_cumu > percen)
+
+        ipca = IncrementalPCA(n_components=k)
+        img_compressed = ipca.fit_transform(img)
+        list_att = ['components_', 'mean_', 'explained_variance_', 'whiten']
+        ipca_att = {}
+        for att in list_att:
+            ipca_att[att] = ipca.__getattribute__(att)
+        return k, img_compressed, ipca_att
+    
+\end{lstlisting}
+
+Kết quả các giá trị mà hàm này trả về :
+\begin{itemize}
+    \item Số lượng thành phần chính cần thiết để có phần trăm nén tương ứng
+    \item Ma trận rút gọn theo các thành phần ở trên
+    \item Các tham số cần thiết cho việc phục hồi lại ma trận ban đầu (đương nhiều là ma trận phục hội sẽ bị mất mát dữ liệu)
+\end{itemize}
+
+
+
+
+hàm này trả về số lượng thành phần chính cần thiết để có được phần trăm nén
 \section{Một số ứng dụng khác}
 Ứng dụng đầu tiên của PCA chính là việc giảm chiều dữ liệu, giúp
 việc lưu trữ và tính toán được thuận tiện hơn. Thực tế cho thấy, nhiều khi làm

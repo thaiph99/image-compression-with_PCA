@@ -41,6 +41,7 @@ def main():
         json.dump(img_origin, f, cls=NpEncoder)
 
     def compress_img(img, percen):
+        '''compress image with percent'''
 
         pca = PCA().fit(img)
         var_cumu = np.cumsum(pca.explained_variance_ratio_)*100
@@ -52,7 +53,6 @@ def main():
         ipca_att = {}
         for att in list_att:
             ipca_att[att] = ipca.__getattribute__(att)
-
         return k, img_compressed, ipca_att
 
     def extract_img(result_compressed):
