@@ -536,6 +536,7 @@ khả thi. Lúc này, các trị riêng và vector riêng của ma trận hiệp
 (\url{https://goo.gl/eBRPxH}).
 
 \section{Ứng dụng trong nén dữ liệu đa phương tiện dạng ảnh}
+
 \subsection{Triển khai thuật toán PCA bằng ngôn ngữ python}
 
 Để thực hiện triển khai thuật toán chúng ta sẽ thực hiện bằng 6 bước sau :
@@ -581,13 +582,29 @@ khả thi. Lúc này, các trị riêng và vector riêng của ma trận hiệp
 \end{lstlisting}
 
 \
-
+\newpage
 \subsection{Chương trình nén sử dụng PCA bằng ngôn ngữ python}
+\subsubsection{Mô hình tổng quan của chương trình}
+
+Mô hình tập trung vào chứng minh tính giảm chiều dữ liệu của thuật toán PCA
+
+\begin{center}
+    \begin{figure}[htp]
+        \begin{center}
+            \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{Chapters/07_DimemsionalityReduction/27_pca/model.png}
+        \end{center}
+        \caption{Mô tả chương trình}
+        \label{fig:27_6}
+    \end{figure}
+\end{center}
+
+\subsubsection{Nén và lưu trữ dữ liệu nén}
+
 Hàm sử dụng để nén các ma trận ảnh riêng biệt kích thước mxn:
-% \newpage
+
 
 Hàm này đươc thực thi với các tham số  là ma trận các điểm ảnh và phần trăm nén ảnh.
-
+\newpage
 \begin{lstlisting}[language=Python]
     def compress_img(img, percen):
         '''compress image with percent'''
@@ -613,10 +630,58 @@ Kết quả các giá trị mà hàm này trả về :
     \item Các tham số cần thiết cho việc phục hồi lại ma trận ban đầu (đương nhiều là ma trận phục hội sẽ bị mất mát dữ liệu)
 \end{itemize}
 
+\subsubsection{Giải nén từ dữ liệu nén}
+
+Hàm giải nén được thực thi với các tham số truyền vào là các giá trị kết quả của hàm nén
+
+Hàm này chịu trách nghiệm phục hồi lại ảnh với kích thước ban đầu
+
+\begin{lstlisting}[language=Python]
+    def extract_img(result_compressed):
+        k = result_compressed[0]
+        ipca = IncrementalPCA(n_components=k)
+        img_compressed = result_compressed[1]
+        dict_att = result_compressed[2]
+        for key in dict_att.keys():
+            ipca.__setattr__(key, dict_att[key])
+        # print((dict_att['mean_']))
+        img_extracted = ipca.inverse_transform(img_compressed)
+        return img_extracted
+    
+\end{lstlisting}
+
+\subsubsection{Phục hồi ảnh từ các ma trận riêng biệt}
+
+
+\newpage
+\subsubsection{Biểu diễn hiệu quả nén}
+
+\begin{center}
+    \begin{figure}[htp]
+        \begin{center}
+            \includegraphics[scale=.5]{Chapters/07_DimemsionalityReduction/27_pca/cumsum.jpg}
+        \end{center}
+        \caption{Đường thể hiện tổng cộng dồn của các giá trị riêng thành phần chính}
+        \label{fig:27_7}
+    \end{figure}
+\end{center}
+
+Biểu đồ trên cho thấy khi ta lựa chọn số phần trăm nén là gần 100$\%$ thì số lượng thành phần được chọn cũng chỉ bằng $1/4$ tổng số thành phần.
+
+
+Nên khi gặp những ảnh có đường biễu diễn như thế thì hiệu quả nén được sẽ lớn nhưng mất mát thì nhỏ.
+
+% \begin{document}
+% \centering
+% \includegraphics[width = \textwidth]{Chapters/07_DimemsionalityReduction/27_pca/cumsum.jpg}
+% \caption{Ví dụ về ảnh của một người trong Yale Face Database.}
+% \end{document}
+
+\subsubsection{}
 
 
 
-hàm này trả về số lượng thành phần chính cần thiết để có được phần trăm nén
+
 \section{Một số ứng dụng khác}
 Ứng dụng đầu tiên của PCA chính là việc giảm chiều dữ liệu, giúp
 việc lưu trữ và tính toán được thuận tiện hơn. Thực tế cho thấy, nhiều khi làm
@@ -657,7 +722,6 @@ người có id là 10.
 % <div class="imgcap">
 % <img src ="/assets/28_pca2/yaleb_exs.png" align = "center" width = "800">
 % </div>
-
 % <div class = "thecap" align = "left">Hình 1: Ví dụ về ảnh của một người trong Yale Face Database. </div>
 % <hr>
 
@@ -783,7 +847,7 @@ cho việc xác định các sự kiện bất thường bằng PCA.
 \end{figure}
 
 
-\section{Thảo luận}
+\section{Kết luận}
 \begin{itemize}
     \item PCA là phương pháp giảm chiều dữ liệu dựa trên việc tối đa lượng
           thông tin được giữ lại. Lượng thông tin được giữ lại được đo bằng tổng các
