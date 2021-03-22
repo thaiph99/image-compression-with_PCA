@@ -630,6 +630,16 @@ Kết quả các giá trị mà hàm này trả về :
     \item Các tham số cần thiết cho việc phục hồi lại ma trận ban đầu (đương nhiều là ma trận phục hội sẽ bị mất mát dữ liệu)
 \end{itemize}
 
+\begin{center}
+    \begin{figure}[htp]
+        \begin{center}
+            \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{Chapters/07_DimemsionalityReduction/27_pca/imgg_origin.jpg}
+        \end{center}
+        \caption{Ảnh đưa vào bộ nén}
+        \label{fig:27_7}
+    \end{figure}
+\end{center}
+
 \subsubsection{Giải nén từ dữ liệu nén}
 
 Hàm giải nén được thực thi với các tham số truyền vào là các giá trị kết quả của hàm nén
@@ -650,7 +660,34 @@ Hàm này chịu trách nghiệm phục hồi lại ảnh với kích thước b
     
 \end{lstlisting}
 
-\subsubsection{Phục hồi ảnh từ các ma trận riêng biệt}
+\subsubsection{Phục hồi ảnh từ các ma trận được giải nén}
+
+Đoạn mã sau thể hiện sự gộp các ma trận của 3 kênh màu RGB từ ảnh ban đầu sau 1 chuỗi xử lý nén và giải nén
+
+\begin{lstlisting}[language=Python]
+    # read json file
+    img_compressed1 = {}
+    with open(path+'imgj_compressed.json', 'r') as f:
+        img_compressed1 = json.load(f)
+
+    # extract image
+    img_extracted = [extract_img(img_tmp)for img_tmp in img_compressed1]
+    img_extracted = concat_img(*img_extracted)
+    
+\end{lstlisting}
+
+Biến \pythoninline{img_extracted} lưu ảnh hoàn thiện sau khi đã gộp lại từ các ma trận của 3 kênh màu RGB
+
+\begin{center}
+    \begin{figure}[htp]
+        \begin{center}
+            \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{Chapters/07_DimemsionalityReduction/27_pca/imgg_extracted.jpg}
+        \end{center}
+        \caption{Ảnh giải nén sau khi đã được gộp từ các ma trận của 3 kênh màu}
+        \label{fig:27_8}
+    \end{figure}
+\end{center}
+
 
 
 \newpage
@@ -662,23 +699,56 @@ Hàm này chịu trách nghiệm phục hồi lại ảnh với kích thước b
             \includegraphics[scale=.5]{Chapters/07_DimemsionalityReduction/27_pca/cumsum.jpg}
         \end{center}
         \caption{Đường thể hiện tổng cộng dồn của các giá trị riêng thành phần chính}
-        \label{fig:27_7}
+        \label{fig:27_9}
     \end{figure}
 \end{center}
 
-Biểu đồ trên cho thấy khi ta lựa chọn số phần trăm nén là gần 100$\%$ thì số lượng thành phần được chọn cũng chỉ bằng $1/4$ tổng số thành phần.
+Biểu đồ trên cho thấy khi ta lựa chọn số phần trăm nén là 99$\%$ thì số lượng thành phần được chọn cũng chỉ bằng $1/4$ tổng số thành phần.
 
 
-Nên khi gặp những ảnh có đường biễu diễn như thế thì hiệu quả nén được sẽ lớn nhưng mất mát thì nhỏ.
+Nên khi gặp những ảnh có đường biểu diễn như thế thì hiệu quả nén được sẽ lớn nhưng mất mát thì nhỏ.
+
+\begin{center}
+    \begin{figure}[htp]
+        \begin{center}
+            \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{Chapters/07_DimemsionalityReduction/27_pca/compare.png}
+        \end{center}
+        \caption{So sánh tệp trước và sau khi nén}
+        \label{fig:27_10}
+    \end{figure}
+\end{center}
+
+Kết quả chúng ta đã thu được tệp nén có kích thước 6.4 MB so với 16.4 MB của tệp gốc, tức là chỉ bằng $40\%$ so với tệp gốc.
+\newpage
+\subsubsection{So sánh hiệu quả nén với các định dạng ảnh khác nhau}
+\begin{center}
+    \begin{figure}[htp]
+        \begin{center}
+            \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{Chapters/07_DimemsionalityReduction/27_pca/barplot.jpg}
+        \end{center}
+        \caption{Đối chiếu kích thước tệp nén và tệp gốc của các định dạng ảnh khác nhau}
+        \label{fig:27_11}
+    \end{figure}
+\end{center}
+
+Chú thích :
+\begin{itemize}
+    \item Cột màu xanh : dung lượng của file gốc
+    \item Cột màu vàng : dung lượng của file nén
+\end{itemize}
+
+Kết luận :
+\begin{itemize}
+    \item Đối với ảnh định dạng jpeg thì hiệu quả nén cao hơn so với các định dạng khác
+    \item Đối với ảnh định dạng png thì hiệu quả nén rất thấp do ảnh png là ảnh được tạo thành từ các vector chứ không phải từ những điểm ảnh cố định
+\end{itemize}
+
 
 % \begin{document}
 % \centering
 % \includegraphics[width = \textwidth]{Chapters/07_DimemsionalityReduction/27_pca/cumsum.jpg}
 % \caption{Ví dụ về ảnh của một người trong Yale Face Database.}
 % \end{document}
-
-\subsubsection{}
-
 
 
 
